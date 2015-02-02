@@ -114,6 +114,8 @@ def parse_raw_input(filename=None):
 				assert len(ukeys)==len(ufields), "User keys and user fields unequal. key: %s, field: %s" % (len(ukeys), len(ufields))
 				for i, ukey in enumerate(ukeys):
 					Data[ukey].append(ufields[i]) #fills the dictionary
+				email = "No valid e-mail" #creates a default field for e-mail per user
+				Data["E-MAIL"].append(email)
 				continue
 			if in_user_block and not have_phone:
 				have_phone = True
@@ -122,8 +124,8 @@ def parse_raw_input(filename=None):
 				continue
 			if in_user_block and not have_email and email_matcher.search(line):
 				have_email = True
-				email = line.strip()
-				Data["E-MAIL"].append(email) #adds e-mail to the dictionary
+				email = line.strip() #if finds e-mail within a user block, rewrites over default empty field
+				Data["E-MAIL"][-1] = email #adds e-mail to the dictionary
 				is_first_user = False
 				continue
 	return Data, Header, filename
